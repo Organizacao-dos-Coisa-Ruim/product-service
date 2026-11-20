@@ -48,4 +48,16 @@ Configure `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_DB`, `DATABASE_USERNAME` e
   PostgreSQL, com as mesmas migrations do Flyway).
 - `ProductServiceTest`: regras do service com o repositório mockado.
 
-Próximos passos: Dockerfile (#27) e entrada no `docker/compose.yml` do `pma26`.
+## Docker
+
+O `Dockerfile` monta a imagem a partir do jar já buildado (a interface `product` precisa estar
+instalada no Maven local):
+
+```bash
+./mvnw clean package
+docker build -t product .
+```
+
+No `pma26`, o serviço sobe pelo `docker/compose.yml` (nome `product`, porta 8080 só na rede
+interna), buildado a partir do código-fonte pelo `docker/java-service.Dockerfile`. O acesso é
+pelo gateway (`http://localhost:8080/products`), e o Prometheus coleta `/actuator/prometheus`.
