@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout da interface Product
+        uses: actions/checkout@v4
+        with:
+          repository: Organizacao-dos-Coisa-Ruim/product
+          path: .deps/product
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Instalar interface
+        run: mvn -B -q install -DskipTests -f .deps/product/pom.xml
+      - name: Build e testes
+        run: mvn -B verify

@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+spring:
+  application:
+    name: product
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_DB:store}
+    username: ${DATABASE_USERNAME:store}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: products
+  flyway:
+    schemas: products
+    default-schema: products
+    create-schemas: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
